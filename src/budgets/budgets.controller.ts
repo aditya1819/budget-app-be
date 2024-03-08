@@ -1,4 +1,6 @@
 import { Controller } from '@nestjs/common';
-
+import { BudgetsService } from './budgets.service';
 @Controller('budgets')
-export class BudgetsController {}
+export class BudgetsController {
+  constructor(private readonly budgetsServices: BudgetsService) {}
+}
