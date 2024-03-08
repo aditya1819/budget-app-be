@@ -70,4 +70,12 @@ export class UsersService {
     }
     return await budget.save();
   }
+
+  async getAllBudgets(userId: string) {
+    return await this.budgetsService.getAllBudgets(userId);
+  }
+
+  async getBudgetDetails(userId: string, budgetId: string) {
+    return await this.budgetsService.getDetails(userId, budgetId);
+  }
 }

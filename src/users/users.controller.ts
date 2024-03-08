@@ -3,6 +3,7 @@ import { User } from 'src/schema/user.schema';
 import { UsersService } from './users.service';
 import { Budget } from 'src/schema/budget.schema';
 import { Expense } from 'src/schema/expense.schema';
+import { BudgetDetailsVo, BudgetsVo } from 'src/budgets/model';
 
 @Controller('users')
 export class UsersController {
@@ -24,6 +25,19 @@ export class UsersController {
     @Body() budget: Partial<Budget>,
   ): Promise<User> {
     return this.userService.addBudgetToUser(userId, budget);
+  }
+
+  @Get(':userId/budgets')
+  async getAllBudgets(@Param('userId') userId: string): Promise<BudgetsVo[]> {
+    return this.userService.getAllBudgets(userId);
+  }
+
+  @Get(':userId/budgets/:budgetId')
+  async getBudgetDetails(
+    @Param('userId') userId: string,
+    @Param('budgetId') budgetId: string,
+  ): Promise<BudgetDetailsVo> {
+    return this.userService.getBudgetDetails(userId, budgetId);
   }
 
   @Post(':userId/budgets/:budgetId/expenses')

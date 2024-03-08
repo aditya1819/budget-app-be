@@ -6,6 +6,7 @@ export type ExpenseDocument = Expense & Document;
 
 @Schema()
 export class Expense {
+  [x: string]: any;
   @Prop({ required: true })
   date: Date;
 
