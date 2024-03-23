@@ -23,7 +23,6 @@ export class UsersService {
 
   async fetchUser(userId: string): Promise<User> {
     const user = await this.userModel.findById(userId);
-    console.log(user.budgets[0].valueOf());
     return user;
   }
 
