@@ -81,4 +81,35 @@ export class BudgetsService {
       throw error;
     }
   }
+
+  async deleteExpense(userId: string, budgetId: string, expenseId: string) {
+    try {
+      const user = await this.userModel
+        .findById(userId)
+        .populate({
+          path: 'budgets',
+          match: { _id: new mongoose.Types.ObjectId(budgetId) }, // Filter budgets by ID
+          populate: { path: 'expenses' }, // Populate expenses within the matched budget
+        })
+        .exec();
+
+      const budget = user.budgets.find((budget) => budget._id);
+
+      if (!budget) {
+        return;
+      }
+
+      const expenses = (budget.expenses ?? []).filter(
+        (exp) => exp.id !== expenseId,
+      );
+
+      await this.expenseModel.deleteOne({ _id: expenseId });
+
+      budget.expenses = expenses;
+      await budget.save();
+    } catch (error) {
+      console.error(JSON.stringify(error));
+      throw error;
+    }
+  }
 }

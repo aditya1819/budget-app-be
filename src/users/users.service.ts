@@ -61,7 +61,6 @@ export class UsersService {
 
     await newExpense.save();
 
-    console.log(budget.expenses);
     if (budget.expenses) {
       budget.expenses.push(newExpense);
     } else {
@@ -80,5 +79,9 @@ export class UsersService {
 
   async deleteBudget(userId: string, budgetId: string) {
     return await this.budgetsService.deleteBudget(userId, budgetId);
+  }
+
+  async deleteExpense(userId: string, budgetId: string, expenseId: string) {
+    return await this.budgetsService.deleteExpense(userId, budgetId, expenseId);
   }
 }

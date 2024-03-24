@@ -56,4 +56,13 @@ export class UsersController {
   ): Promise<Budget> {
     return this.userService.addExpenseToBudget(userId, budgetId, expense);
   }
+
+  @Delete(':userId/budgets/:budgetId/expenses/:expenseId')
+  async deleteExpense(
+    @Param('userId') userId: string,
+    @Param('budgetId') budgetId: string,
+    @Param('expenseId') expenseId: string,
+  ): Promise<void> {
+    return this.userService.deleteExpense(userId, budgetId, expenseId);
+  }
 }
