@@ -77,4 +77,8 @@ export class UsersService {
   async getBudgetDetails(userId: string, budgetId: string) {
     return await this.budgetsService.getDetails(userId, budgetId);
   }
+
+  async deleteBudget(userId: string, budgetId: string) {
+    return await this.budgetsService.deleteBudget(userId, budgetId);
+  }
 }
