@@ -4,12 +4,14 @@ import mongoose, { Model } from 'mongoose';
 import { Budget, BudgetDocument } from 'src/schema/budget.schema';
 import { User, UserDocument } from 'src/schema/user.schema';
 import { BudgetDetailsVo, BudgetsVo } from './model';
+import { Expense, ExpenseDocument } from 'src/schema/expense.schema';
 
 @Injectable()
 export class BudgetsService {
   constructor(
     @InjectModel(Budget.name) private budgetModel: Model<BudgetDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(Expense.name) private expenseModel: Model<ExpenseDocument>,
   ) {}
 
   async findBudgetById(user: User, budgetId: string) {
@@ -61,7 +63,53 @@ export class BudgetsService {
       throw new Error('User not found');
     }
 
-    console.log(user.budgets[0]);
     return new BudgetDetailsVo(user.budgets[0]);
+  }
+
+  async deleteBudget(userId: string, budgetId: string) {
+    try {
+      const budget = await this.getDetails(userId, budgetId);
+      const expenses = (budget.expenses ?? []).map((expense) => expense.id);
+
+      if (expenses.length) {
+        await this.expenseModel.deleteMany({ _id: { $in: expenses } });
+      }
+
+      await this.budgetModel.deleteOne({ _id: budget.id });
+    } catch (error) {
+      console.error(JSON.stringify(error));
+      throw error;
+    }
+  }
+
+  async deleteExpense(userId: string, budgetId: string, expenseId: string) {
+    try {
+      const user = await this.userModel
+        .findById(userId)
+        .populate({
+          path: 'budgets',
+          match: { _id: new mongoose.Types.ObjectId(budgetId) }, // Filter budgets by ID
+          populate: { path: 'expenses' }, // Populate expenses within the matched budget
+        })
+        .exec();
+
+      const budget = user.budgets.find((budget) => budget._id);
+
+      if (!budget) {
+        return;
+      }
+
+      const expenses = (budget.expenses ?? []).filter(
+        (exp) => exp.id !== expenseId,
+      );
+
+      await this.expenseModel.deleteOne({ _id: expenseId });
+
+      budget.expenses = expenses;
+      await budget.save();
+    } catch (error) {
+      console.error(JSON.stringify(error));
+      throw error;
+    }
   }
 }

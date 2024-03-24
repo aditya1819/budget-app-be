@@ -23,7 +23,6 @@ export class UsersService {
 
   async fetchUser(userId: string): Promise<User> {
     const user = await this.userModel.findById(userId);
-    console.log(user.budgets[0].valueOf());
     return user;
   }
 
@@ -62,7 +61,6 @@ export class UsersService {
 
     await newExpense.save();
 
-    console.log(budget.expenses);
     if (budget.expenses) {
       budget.expenses.push(newExpense);
     } else {
@@ -77,5 +75,13 @@ export class UsersService {
 
   async getBudgetDetails(userId: string, budgetId: string) {
     return await this.budgetsService.getDetails(userId, budgetId);
+  }
+
+  async deleteBudget(userId: string, budgetId: string) {
+    return await this.budgetsService.deleteBudget(userId, budgetId);
+  }
+
+  async deleteExpense(userId: string, budgetId: string, expenseId: string) {
+    return await this.budgetsService.deleteExpense(userId, budgetId, expenseId);
   }
 }

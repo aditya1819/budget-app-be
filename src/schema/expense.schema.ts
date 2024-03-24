@@ -15,9 +15,6 @@ export class Expense {
 
   @Prop({ required: true })
   amount: number;
-
-  @Prop({ required: true })
-  category: string;
 }
 
 export const ExpenseSchema = SchemaFactory.createForClass(Expense);

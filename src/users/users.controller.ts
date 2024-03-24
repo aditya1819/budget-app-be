@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { User } from 'src/schema/user.schema';
 import { UsersService } from './users.service';
 import { Budget } from 'src/schema/budget.schema';
@@ -32,6 +32,14 @@ export class UsersController {
     return this.userService.getAllBudgets(userId);
   }
 
+  @Delete(':userId/budgets/:budgetId')
+  async deleteBudget(
+    @Param('userId') userId: string,
+    @Param('budgetId') budgetId: string,
+  ): Promise<void> {
+    return this.userService.deleteBudget(userId, budgetId);
+  }
+
   @Get(':userId/budgets/:budgetId')
   async getBudgetDetails(
     @Param('userId') userId: string,
@@ -47,5 +55,14 @@ export class UsersController {
     @Body() expense: Expense,
   ): Promise<Budget> {
     return this.userService.addExpenseToBudget(userId, budgetId, expense);
+  }
+
+  @Delete(':userId/budgets/:budgetId/expenses/:expenseId')
+  async deleteExpense(
+    @Param('userId') userId: string,
+    @Param('budgetId') budgetId: string,
+    @Param('expenseId') expenseId: string,
+  ): Promise<void> {
+    return this.userService.deleteExpense(userId, budgetId, expenseId);
   }
 }
