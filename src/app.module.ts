@@ -3,13 +3,15 @@ import { BudgetsModule } from './budgets/budgets.module';
 import { UsersModule } from './users/users.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { getSecrets } from './LoadConfig';
 
 @Module({
   imports: [
     BudgetsModule,
     UsersModule,
     ConfigModule.forRoot({
-      isGlobal: true, // This makes the ConfigModule global, so you don't need to import it in other modules
+      isGlobal: true, // This makes the ConfigModule global, so you don't need to import it in other modules4
+      load: [getSecrets],
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
