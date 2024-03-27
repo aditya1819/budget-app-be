@@ -20,11 +20,13 @@ export class ExpenseVo {
   id: string;
   title: string;
   amount: number;
+  date: string | Date;
 
   constructor(expense: Expense) {
     this.id = expense._id;
     this.title = expense.detail;
     this.amount = expense.amount;
+    this.date = expense.date;
   }
 }
 
